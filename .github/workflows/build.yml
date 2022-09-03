@@ -40,9 +40,20 @@ jobs:
           path: build
           retention-days: 1
       
+      - name: Restore repo
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Apply build
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifact
+          path: build
+      
       - name: Commit
         run: |
-          git config advice.addIgnoredFile false
+          git config advice.addIgnoredFile true
           git add --no-all ./**
           git config --local user.email "actions@github.com"
           git config --local user.name "Builder"
