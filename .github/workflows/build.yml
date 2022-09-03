@@ -1,0 +1,44 @@
+name: Autobuild
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Compile to JavaScript
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clean working directory
+        run: rm -rf /home/runner/work/${{ github.repository }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Install the Dependencies
+        run: npm install --include dev
+
+      - name: Build and Commit
+        run: >
+          npm run build
+          git add --no-all ./**
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Builder"
+          git commit -m "Publish build" || true
+
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}
+          branch: master
