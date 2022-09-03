@@ -29,9 +29,20 @@ jobs:
       - name: Install the Dependencies
         run: npm install --include dev
 
-      - name: Build and Commit
+      - name: Build
         run: >
           npm run build
+      
+      - name: Stage build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: .
+          retention-days: 1
+      
+      - name: Commit
+        run: |
+          git config advice.addIgnoredFile false
           git add --no-all ./**
           git config --local user.email "actions@github.com"
           git config --local user.name "Builder"
