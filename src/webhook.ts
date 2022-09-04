@@ -3,7 +3,7 @@ import {
     DiscordWebhookContent as WebhookContent,
     DiscordWebhook as Webhook,
 } from "./typings";
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
 export class DiscordWebhook {
     webhookUrl: string;
@@ -34,7 +34,7 @@ export class DiscordWebhook {
             if (!response.ok) {
                 return reject("Webhook doesn't exist");
             }
-            resolve(response.json() as Webhook);
+            resolve(response.json() as Webhook | any);
         });
     }
 

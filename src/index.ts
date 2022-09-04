@@ -2,12 +2,14 @@ import express from "express";
 import dotenv from "dotenv";
 import { DiscordWebhook } from "./webhook";
 import { YouTubeVideo } from "./typings";
+// @ts-ignore
+import YouTubeNotifier from "youtube-notification";
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 const baseUrl = `${process.env.SERVER}:${port}`;
-const YouTubeNotifier = require("youtube-notification");
+
 const YT_LUSOR = "UCutxBsHkawd5e_0rsWNYHpw";
 const YT_EHRENLORD = "UCAAG4XG6FI6WtfJX0e5HTxg";
 const channels = [YT_LUSOR, YT_EHRENLORD];
@@ -36,7 +38,7 @@ notifier.on("notified", (data: YouTubeVideo) => {
         console.log(`${data.channel.name} published ${data.video.title}`);
         webhook.send({
             content: `Hey <@&880108096788234300>,\n${
-                data.channel.id === process.env.YT_LUSOR ? "die **Lusors** haben" : "**Doppelter Ehrenlord** hat"
+                data.channel.id === YT_LUSOR ? "die **Lusors** haben" : "**Doppelter Ehrenlord** hat"
             } ein neues Video hochgeladen! 🤙\n${data.video.link}`,
         });
     }
