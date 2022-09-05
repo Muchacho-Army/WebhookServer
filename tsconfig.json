@@ -1,15 +1,10 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "esModuleInterop": true,            
-    "allowJs": true,
-    "outDir": "build",                          
-    "rootDir": "src",
-    "strict": true,         
-    "noImplicitAny": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "Node",
-    "pretty": true
-  }
+    "extends": "@tsconfig/node16/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "build",                          
+        "rootDir": "src",
+        "pretty": true
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"]
 }

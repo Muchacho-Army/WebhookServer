@@ -3,8 +3,9 @@ import {
     DiscordWebhookContent as WebhookContent,
     DiscordWebhook as Webhook,
 } from "./typings";
+import fetch from "node-fetch";
 
-export class DiscordWebhook {
+export default class DiscordWebhook {
     webhookUrl: string;
     webhookData: {};
     constructor(webhookUrl: string) {
