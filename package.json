@@ -1,20 +1,17 @@
 {
   "name": "webhook-server",
   "version": "1.0.0",
-  "description": "Automatically sends webhooks when a new YouTube Video is uploaded",
+  "description": "Simple webhook server for sending webhooks when a youtube channel uploads a new video",
   "main": "index.js",
   "scripts": {
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",
     "start:dev": "nodemon"
   },
-  "keywords": [],
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^18.7.14",
-    "@types/node-fetch": "^2.6.2",
     "nodemon": "^2.0.19",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
@@ -23,7 +20,6 @@
   "dependencies": {
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
-    "node-fetch": "^2.6.7",
     "youtube-notification": "^1.1.0"
   }
 }

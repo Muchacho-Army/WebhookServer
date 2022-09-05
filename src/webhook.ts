@@ -3,7 +3,6 @@ import {
     DiscordWebhookContent as WebhookContent,
     DiscordWebhook as Webhook,
 } from "./typings";
-import fetch from "node-fetch";
 
 export class DiscordWebhook {
     webhookUrl: string;
@@ -38,9 +37,12 @@ export class DiscordWebhook {
         });
     }
 
-    isValid(): Promise<boolean> {
-        return this.get()
-            .then(() => true)
-            .catch(() => false);
+    async isValid(): Promise<boolean> {
+        try {
+            await this.get();
+            return true;
+        } catch {
+            return false;
+        }
     }
 }
