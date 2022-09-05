@@ -8,12 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscordWebhook = void 0;
-const node_fetch_1 = __importDefault(require("node-fetch"));
 class DiscordWebhook {
     constructor(webhookUrl) {
         this.webhookUrl = webhookUrl;
@@ -29,7 +25,7 @@ class DiscordWebhook {
     send(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const webhookData = this.webhookData;
-            (0, node_fetch_1.default)(this.webhookUrl, {
+            fetch(this.webhookUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(Object.assign(Object.assign({}, webhookData), data)),
@@ -39,7 +35,7 @@ class DiscordWebhook {
     get() {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                const response = yield (0, node_fetch_1.default)(this.webhookUrl);
+                const response = yield fetch(this.webhookUrl);
                 if (!response.ok) {
                     return reject("Webhook doesn't exist");
                 }
@@ -48,9 +44,15 @@ class DiscordWebhook {
         });
     }
     isValid() {
-        return this.get()
-            .then(() => true)
-            .catch(() => false);
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.get();
+                return true;
+            }
+            catch (_a) {
+                return false;
+            }
+        });
     }
 }
 exports.DiscordWebhook = DiscordWebhook;
