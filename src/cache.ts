@@ -1,16 +1,16 @@
 import { YouTubeVideo } from "./typings";
 
 export default class Cache {
-    private cacheData: {};
+    private cacheData: any;
     constructor() {
         this.cacheData = {};
     }
 
     getItem(key: string): YouTubeVideo | undefined {
-        return this.cacheData[key]["data"] as YouTubeVideo;
+        return this.cacheData[key];
     }
 
-    setItem(key: string, value: any): void {
+    setItem(key: string, value: YouTubeVideo): void {
         this.cacheData[key] = value;
         setTimeout(() => delete this.cacheData[key], 1000 * 60 * 60 * 24 * 7); // Delete after 7 days
     }
