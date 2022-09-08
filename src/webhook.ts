@@ -6,20 +6,20 @@ import {
 import fetch from "node-fetch";
 
 export default class DiscordWebhook {
-    webhookUrl: string;
-    webhookData: {};
+    private webhookUrl: string;
+    private webhookData: {};
     constructor(webhookUrl: string) {
         this.webhookUrl = webhookUrl;
         this.webhookData = {};
     }
 
-    async modify(data: Author) {
+    async modify(data: Author): Promise<Author> {
         const webhookData = this.webhookData;
         this.webhookData = { ...webhookData, ...data };
         return this.webhookData as Author;
     }
 
-    async send(data: WebhookContent) {
+    async send(data: WebhookContent): Promise<void> {
         const webhookData = this.webhookData;
         fetch(this.webhookUrl, {
             method: "POST",
@@ -29,7 +29,7 @@ export default class DiscordWebhook {
     }
 
     async get(): Promise<Webhook | null> {
-        return new Promise<Webhook | null>(async (resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const response = await fetch(this.webhookUrl);
             if (!response.ok) {
                 return reject("Webhook doesn't exist");

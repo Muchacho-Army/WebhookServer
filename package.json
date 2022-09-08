@@ -4,8 +4,7 @@
   "description": "Simple webhook server for sending webhooks when a youtube channel uploads a new video",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js",
+    "start": "ts-node src/index.ts",
     "start:dev": "nodemon"
   },
   "license": "MIT",
@@ -15,7 +14,6 @@
     "@types/node": "^18.7.14",
     "@types/node-fetch": "^2.6.2",
     "nodemon": "^2.0.19",
-    "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.2"
   },
