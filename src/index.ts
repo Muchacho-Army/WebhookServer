@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import DiscordWebhook from "./webhook";
-import { YouTubeVideo } from "./typings";
+import { YouTubeSubscription, YouTubeVideo } from "./typings";
 // @ts-ignore
 import YouTubeNotifier from "youtube-notification";
 import Cache from "./cache";
@@ -27,7 +27,7 @@ tv_webhook.modify({
 });
 
 const notifier = new YouTubeNotifier({
-    hubCallback: `${baseUrl}/youtube/notifications`,
+    hubCallback: `${baseUrl}/youtube/notifications`
 });
 
 const cache = new Cache();
@@ -38,7 +38,11 @@ app.listen(port, () => {
 });
 
 notifier.subscribe(channels);
-notifier.on("subscribe", (data: any) => {
+notifier.on("subscribe", (data: YouTubeSubscription) => {
+    setTimeout(() => {
+        notifier.unsubscribe(data.channel);
+        notifier.subscribe(data.channel);
+    }, (Number(data.lease_seconds) - 5) * 1000);
     console.log(`Subscribed to ${data.channel}`);
 });
 notifier.on("notified", (data: YouTubeVideo) => {

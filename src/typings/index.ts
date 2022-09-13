@@ -1,3 +1,9 @@
+export interface YouTubeSubscription {
+    type: string;
+    channel: string;
+    lease_seconds: string;
+}
+
 export interface YouTubeVideo {
     video: {
         id: string;
