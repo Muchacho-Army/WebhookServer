@@ -46,7 +46,7 @@ notifier.on("subscribe", (data: YouTubeSubscription) => {
     console.log(`Subscribed to ${data.channel}`);
 });
 notifier.on("notified", (data: YouTubeVideo) => {
-    if (cache.getItem(data.video.id) !== undefined && (new Date(data.published) < new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7))) return;
+    if (cache.getItem(data.video.id) !== undefined || (new Date(data.published) < new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7))) return;
     console.log(`${data.channel.name} published ${data.video.title}`);
     yt_webhook.send({
         content: `Hey <@&880108096788234300>,\n**${data.channel.name}** hat ein neues Video hochgeladen! 🤙\n${data.video.link}`,
