@@ -1,11 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
-import DiscordWebhook from "./webhook";
-import { YouTubeSubscription, YouTubeVideo } from "./typings";
 // @ts-ignore
 import YouTubeNotifier from "youtube-notification";
+
+import DiscordWebhook from "./webhook";
+import { YouTubeSubscription, YouTubeVideo } from "./typings";
 import Cache from "./cache";
 import Logger from "./logger";
+
 dotenv.config();
 
 const app = express();
@@ -23,7 +25,7 @@ yt_webhook.modify({
 });
 
 const notifier = new YouTubeNotifier({
-    hubCallback: `${baseUrl}/youtube/notifications`
+    hubCallback: `${baseUrl}/youtube/notifications`,
 });
 
 const cache = new Cache();
@@ -37,13 +39,16 @@ app.listen(port, () => {
 notifier.subscribe(channels);
 notifier.on("subscribe", (data: YouTubeSubscription) => {
     setTimeout(() => {
-        notifier.unsubscribe(data.channel);
         notifier.subscribe(data.channel);
     }, (Number(data.lease_seconds) - 5) * 1000);
     logger.write(`Subscribed to ${data.channel}: ${JSON.stringify(data)}`);
 });
 notifier.on("notified", (data: YouTubeVideo) => {
-    if (cache.getItem(data.video.id) !== undefined || (new Date(data.published) < new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7))) return;
+    if (
+        cache.getItem(data.video.id) !== undefined ||
+        new Date(data.published) < new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7)
+    )
+        return;
     logger.write(`${data.channel.name} published ${data.video.title}`);
     yt_webhook.send({
         content: `Hey <@&880108096788234300>,\n**${data.channel.name}** hat ein neues Video hochgeladen! 🤙\n${data.video.link}`,
