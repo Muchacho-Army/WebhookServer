@@ -45,6 +45,7 @@ notifier.on("subscribe", (data: YouTubeSubscription) => {
 });
 notifier.on("notified", (data: YouTubeVideo) => {
     if (
+        !channels.includes(data.channel.id) ||
         cache.getItem(data.video.id) !== undefined ||
         new Date(data.published) < new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7)
     )
