@@ -4,15 +4,16 @@ import path from "path";
 const timestamp = () => new Date().toISOString().replace("T", " ").replace("Z", "");
 
 export default class Logger {
-    private file: fs.WriteStream;
-    constructor() {
-        this.file = fs.createWriteStream(path.join(__dirname, "../debug.log"), { flags: "a" });
-        this.file.write("==================================================================\n");
+    private static file: fs.WriteStream = fs.createWriteStream(path.join(__dirname, "../debug.log"));
+    public module: string;
+
+    constructor(module: string) {
+        this.module = module;
     }
 
     write(message: string): void {
-        const out = `${timestamp()} | ${message}`;
+        const out = `[${timestamp()}] [${this.module}] ${message}`;
         console.log(out);
-        this.file.write(`${out}\n`);
+        Logger.file.write(`${out}\n`);
     }
 }

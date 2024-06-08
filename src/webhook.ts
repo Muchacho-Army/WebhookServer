@@ -31,19 +31,12 @@ export default class DiscordWebhook {
     async get(): Promise<Webhook | null> {
         return new Promise(async (resolve, reject) => {
             const response = await fetch(this.webhookUrl);
-            if (!response.ok) {
-                return reject("Webhook doesn't exist");
-            }
+            if (!response.ok) return reject("Webhook doesn't exist");
             resolve(response.json() as Webhook | any);
         });
     }
 
     async isValid(): Promise<boolean> {
-        try {
-            await this.get();
-            return true;
-        } catch {
-            return false;
-        }
+        return this.get().then(() => true).catch(() => false);
     }
 }

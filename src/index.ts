@@ -1,58 +1,26 @@
-import express from "express";
 import dotenv from "dotenv";
-// @ts-ignore
-import YouTubeNotifier from "youtube-notification";
+import express from "express";
 
-import DiscordWebhook from "./webhook";
-import { YouTubeSubscription, YouTubeVideo } from "./typings";
-import Cache from "./cache";
 import Logger from "./logger";
+import YouTube from "./platforms/youtube";
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 443;
 const baseUrl = `${process.env.SERVER}:${port}`;
+
+const logger = new Logger("App");
 
 const YT_LUSOR = "UCutxBsHkawd5e_0rsWNYHpw";
 const YT_EHRENLORD = "UCAAG4XG6FI6WtfJX0e5HTxg";
-const channels = [YT_LUSOR, YT_EHRENLORD];
+const YT_CHANNELS = [YT_LUSOR, YT_EHRENLORD];
 
-const yt_webhook = new DiscordWebhook(process.env.WEBHOOK_URL as string);
-yt_webhook.modify({
-    username: "YouTube",
-    avatar_url: "https://cdn.discordapp.com/app-assets/769568156309389332/1015627360156008448.png",
-});
+const youtube = new YouTube({ base_url: baseUrl, channels: YT_CHANNELS, webhook: process.env.DISCORD_WEBHOOK as string });
 
-const notifier = new YouTubeNotifier({
-    hubCallback: `${baseUrl}/youtube/notifications`,
-});
+app.use(youtube.middleware());
 
-const cache = new Cache();
-const logger = new Logger();
-
-app.use("/youtube/notifications", notifier.listener());
-app.listen(port, () => {
-    logger.write(`App listening at http://localhost:${port}`);
+app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok", uptime: Math.floor(process.uptime()) });
 });
-
-notifier.subscribe(channels);
-notifier.on("subscribe", (data: YouTubeSubscription) => {
-    setTimeout(() => {
-        notifier.subscribe(data.channel);
-    }, (Number(data.lease_seconds) - 5) * 1000);
-    logger.write(`Subscribed to ${data.channel}: ${JSON.stringify(data)}`);
-});
-notifier.on("notified", (data: YouTubeVideo) => {
-    if (
-        !channels.includes(data.channel.id) ||
-        cache.getItem(data.video.id) !== undefined ||
-        new Date(data.published) < new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7)
-    )
-        return;
-    logger.write(`${data.channel.name} published ${data.video.title}`);
-    yt_webhook.send({
-        content: `Hey <@&880108096788234300>,\n**${data.channel.name}** hat ein neues Video hochgeladen! 🤙\n${data.video.link}`,
-    });
-    cache.setItem(data.video.id, data);
-});
+app.listen(port, () => logger.write(`Listening at ${baseUrl}`));

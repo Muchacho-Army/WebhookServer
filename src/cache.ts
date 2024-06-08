@@ -1,7 +1,7 @@
 import { YouTubeVideo } from "./typings";
 
 export default class Cache {
-    private cacheData: any;
+    private cacheData: { [key: string]: YouTubeVideo };
     constructor() {
         this.cacheData = {};
     }
