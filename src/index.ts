@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 443;
-const baseUrl = `${process.env.SERVER}:${port}`;
+const baseUrl = `${process.env.FQDN}:${port}`;
 
 const logger = new Logger("App");
 
@@ -16,7 +16,7 @@ const YT_LUSOR = "UCutxBsHkawd5e_0rsWNYHpw";
 const YT_EHRENLORD = "UCAAG4XG6FI6WtfJX0e5HTxg";
 const YT_CHANNELS = [YT_LUSOR, YT_EHRENLORD];
 
-const youtube = new YouTube({ base_url: baseUrl, channels: YT_CHANNELS, webhook: process.env.DISCORD_WEBHOOK as string });
+const youtube = new YouTube({ base_url: baseUrl, channels: YT_CHANNELS, webhook: process.env.DISCORD_WEBHOOK_URL as string });
 
 app.use(youtube.middleware());
 

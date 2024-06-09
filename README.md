@@ -11,8 +11,7 @@ Simple webhook server for sending webhooks to a discord server when a youtube ch
 - Create a .env file in the root directory with the following content:
     ```
     PORT = 8080
-    SERVER = "http://your.server.com"
-    YT_WEBHOOK_URL = "https://discord.com/api/webhooks/..."
-    TWITCH_WEBHOOK_URL = "https://discord.com/api/webhooks/..."
+    FQDN = "http://your.server.com"
+    DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/..."
     ```
 - Start the server with `npm start`
